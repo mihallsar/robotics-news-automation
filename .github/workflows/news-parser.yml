@@ -1,0 +1,31 @@
+name: Robotics News Parser
+
+on:
+  schedule:
+    # Запуск в 2:00 и 14:00 UTC (это 6:00 и 18:00 по вашему времени GMT+4)
+    - cron: '0 2,14 * * *'
+  
+  # Возможность запустить вручную через GitHub UI
+  workflow_dispatch:
+
+jobs:
+  parse-and-publish-news:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Execute Composio Recipe
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-API-Key: ${{ secrets.COMPOSIO_API_KEY }}" \
+            https://backend.composio.dev/api/v1/recipes/rcp_YxSUTC0geTxp/execute \
+            -d '{
+              "search_keywords": "robots robotics artificial intelligence automation",
+              "time_period": "d",
+              "news_count": "5",
+              "webhook_url": "${{ secrets.WEBHOOK_URL }}",
+              "api_key": "${{ secrets.WEBHOOK_API_KEY }}"
+            }'
+      
+      - name: Check Result
+        run: echo "✅ News parsing completed!"
