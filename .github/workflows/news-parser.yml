@@ -4,21 +4,22 @@ on:
   schedule:
     # Запуск в 2:00 и 14:00 UTC (это 6:00 и 18:00 по вашему времени GMT+4)
     - cron: '0 2,14 * * *'
-
+  
   # Возможность запустить вручную через GitHub UI
   workflow_dispatch:
 
 jobs:
   parse-and-publish-news:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: 📰 Execute Robotics News Parser (7 days)
+      - name:  📰 Execute Robotics News Parser (7 days)
         run: |
           echo "🚀 Starting news parser..."
-          echo "📅 Search period: 7 days (increased from 1 day)"
-          echo "🔍 Keywords: robots robotics AI automation"
-
+          echo "📅 Search period: 7 days"
+          echo "🔍 Keywords: robots robotics AI automation humanoid"
+          echo "📡 Publishing to: robototehnika.vercel.app"
+          
           curl -X POST \
             -H "Content-Type: application/json" \
             -H "X-API-Key: ${{ secrets.COMPOSIO_API_KEY }}" \
@@ -27,15 +28,16 @@ jobs:
               "search_keywords": "robots robotics artificial intelligence automation humanoid",
               "time_period": "7d",
               "news_count": "10",
-              "webhook_url": "${{ secrets.WEBHOOK_URL }}",
-              "api_key": "${{ secrets.WEBHOOK_API_KEY }}"
-            }' | jq '.data.data'
-
+              "webhook_url": "https://robototehnika.vercel.app/api/news",
+              "api_key": "prorobotov2024"
+            }' | jq '.data'
+          
           echo ""
           echo "✅ News parsing completed!"
-
+      
       - name: 📊 Summary
         run: |
           echo "🎉 Robotics news update finished!"
           echo "🔥 Searching 7 days back for fresh news"
           echo "📈 Fetching up to 10 news articles"
+          echo "🎯 Publishing directly to API"
