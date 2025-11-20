@@ -1,0 +1,17 @@
+name: DIY Project Parser (Daily)
+
+on:
+  schedule:
+    - cron: '0 10 * * *' # Каждый день в 10:00 UTC (~14:00 по Саратову)
+  workflow_dispatch:
+
+jobs:
+  run-diy-recipe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Rube Recipe for DIY Projects
+        run: |
+          curl -X POST "https://backend.composio.dev/api/v1/recipes/rcp_Dv0XyS0Htw66/execute" \
+               -H "X-API-Key: prorobotov2024" \
+               -H "Content-Type: application/json" \
+               -d '{"input_data":{"webhook_url":"https://robototehnika.vercel.app/api/projects","api_key":"prorobotov2024","search_keywords":"DIY robot Arduino Raspberry Pi robotics project tutorial","project_count":"5"}}'
