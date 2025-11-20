@@ -13,24 +13,30 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: 🤖 Parse Robot Catalog via Rube
+      - name: 🤖 Parse Robot Catalog via Rube (Optimized)
         run: |
-          echo "🚀 Starting robot catalog parser..."
+          echo "🚀 Starting optimized robot catalog parser..."
+          echo "🎯 Using new recipe: rcp_5ajueyVK76BF"
+          echo "⚡ Parallelism: 10 workers"
+          echo "🏭 Manufacturers: 24"
           
-          curl -X POST "https://backend.composio.dev/api/v1/actions/rcp_zqcpF4RJ7QIv/execute" \
+          curl -X POST "https://backend.composio.dev/api/v1/recipes/rcp_5ajueyVK76BF/execute" \
             -H "Content-Type: application/json" \
             -H "x-api-key: ${{ secrets.COMPOSIO_API_KEY }}" \
             -d '{
-              "input": {
+              "input_data": {
                 "api_key": "prorobotov2024",
                 "api_url": "https://robototehnika.vercel.app/api/robots",
-                "search_mode": "all"
+                "search_mode": "all",
+                "max_robots_per_manufacturer": "all"
               }
-            }' | jq '.'
+            }' | jq '.data.data'
           
+          echo ""
           echo "✅ Robot catalog parsing completed!"
       
       - name: 𓌊 Summary
         run: |
           echo "🎉 Daily robot catalog update finished!"
+          echo "🔨 New optimized recipe: 21+ manufacturers, 100+robots!"
           echo "Check: https://robototehnika.vercel.app/api/robots"
