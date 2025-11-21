@@ -1,0 +1,17 @@
+name: Useful Resources Parser (Daily)
+
+on:
+  schedule:
+    - cron: '0 11 * * *' # Каждый день в 11:00 UTC (~15:00 по Саратову)
+  workflow_dispatch:
+
+jobs:
+  run-useful-recipe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Rube Recipe for Useful Resources
+        run: |
+          curl -X POST "https://backend.composio.dev/api/v1/recipes/rcp_EuZwKlnKMhyB/execute" \
+            -H "X-API-Key: prorobotov2024" \
+            -H "Content-Type: application/json" \
+            -d '{"input_data":{"webhook_url":"https://robototehnika.vercel.app/api/useful","api_key":"prorobotov2024","resource_count":"2"}}'
