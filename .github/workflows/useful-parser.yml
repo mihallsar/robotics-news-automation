@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Run Rube Recipe for Useful Resources
         run: |
-          curl -X POST "https://backend.composio.dev/api/v1/recipes/rcp_EuZwKlnKMhyB/execute" \
+          curl -X POST "https://backend.composio.dev/api/v3/recipes/rcp_EuZwKlnKMhyB/execute" \
             -H "X-API-Key: prorobotov2024" \
             -H "Content-Type: application/json" \
             -d '{"input_data":{"webhook_url":"https://robototehnika.vercel.app/api/useful","api_key":"prorobotov2024","resource_count":"2"}}'
