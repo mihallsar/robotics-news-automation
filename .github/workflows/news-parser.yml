@@ -23,7 +23,7 @@ jobs:
           curl -X POST \
             -H "Content-Type: application/json" \
             -H "X-API-Key: ${{ secrets.COMPOSIO_API_KEY }}" \
-            https://backend.composio.dev/api/v1/recipes/rcp_YxSUTC0geTxp/execute \
+            https://backend.composio.dev/api/v3/recipes/rcp_YxSUTC0geTxp/execute \
             -d '{
               "search_keywords": "robots robotics artificial intelligence automation humanoid",
               "time_period": "7d",
