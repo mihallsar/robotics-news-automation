@@ -20,9 +20,9 @@ jobs:
           echo "⚡ Parallelism: 10 workers"
           echo "🏭 Manufacturers: 24"
           
-          curl -X POST "https://backend.composio.dev/api/v1/recipes/rcp_5ajueyVK76BF/execute" \
+          curl -X POST "https://backend.composio.dev/api/v3/recipes/rcp_5ajueyVK76BF/execute" \
             -H "Content-Type: application/json" \
-            -H "x-api-key: ${{ secrets.COMPOSIO_API_KEY }}" \
+            -H "X-API-Key: ${{ secrets.COMPOSIO_API_KEY }}" \
             -d '{
               "input_data": {
                 "api_key": "prorobotov2024",
