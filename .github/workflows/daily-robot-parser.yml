@@ -3,7 +3,7 @@ name: Daily Robot Catalog Parser
 on:
   schedule:
     # Запуск каждый день в 03:00 UTC (07:00по Саратову, GMT+4)
-    - cron: '0 3 * * *'
+    - cron: '0 6,18 * * *'  # Дважды в день: 10:00 и 22:00 по Саратову
   
   # Можно также запускать вручную
   workflow_dispatch:
