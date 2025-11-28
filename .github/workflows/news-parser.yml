@@ -3,7 +3,7 @@ name: Robotics News Parser
 on:
   schedule:
     # Запуск в 2:00 и 14:00 UTC (это 6:00 и 18:00 по вашему времени GMT+4)
-    - cron: '0 2,14 * * *'
+    - cron: '0 6,18 * * *'  # Дважды в день: 10:00 и 22:00 по Саратову
   
   # Возможность запустить вручную через GitHub UI
   workflow_dispatch:
