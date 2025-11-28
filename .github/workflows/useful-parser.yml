@@ -3,7 +3,7 @@ name: Useful Resources Parser (Daily)
 on:
   schedule:
     # Каждый день в 11:00 UTC (~15:00 по Саратову)
-    - cron: '0 11 * * *'
+    - cron: '0 6,18 * * *'  # Дважды в день: 10:00 и Вж:00 по Саратову
   workflow_dispatch:
 
 jobs:
