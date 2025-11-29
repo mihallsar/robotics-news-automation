@@ -2,16 +2,36 @@ name: DIY Project Parser (Daily)
 
 on:
   schedule:
-    - cron: '0 6,18 * * *'  # Дважды в день: 10:00 и 22:00 по Саратову # Каждый день в 10:00 UTC (~14:00 по Саратову)
+    - cron: '0 6,18 * * *'  # Дважды в день: 10:00 и 22:00 по Саратову
   workflow_dispatch:
 
 jobs:
   run-diy-recipe:
     runs-on: ubuntu-latest
     steps:
-      - name: Run Rube Recipe for DIY Projects
+      - name: 🔧 Run DIY Projects Parser
         run: |
-          curl -X POST "https://backend.composio.dev/api/v1/recipes/rcp_Dv0XyS0Htw66/execute" \
-               -H "X-API-Key: prorobotov2024" \
+          echo "🚀 Starting DIY robotics projects parser..."
+          echo "🔍 Keywords: DIY robot Arduino Raspberry Pi"
+          echo "📡 Publishing to: robototehnika.vercel.app/api/projects"
+
+          curl -X POST "https://backend.composio.dev/api/v3/recipes/rcp_Dv0XyS0Htw66/execute" \
+               -H "X-API-Key: ${{ secrets.COMPOSIO_API_KEY }}" \
                -H "Content-Type: application/json" \
-               -d '{"input_data":{"webhook_url":"https://robototehnika.vercel.app/api/projects","api_key":"prorobotov2024","search_keywords":"DIY robot Arduino Raspberry Pi robotics project tutorial","project_count":"5"}}'
+               -d '{
+                 "input_data": {
+                   "webhook_url": "https://robototehnika.vercel.app/api/projects",
+                   "api_key": "prorobotov2024",
+                   "search_keywords": "DIY robot Arduino Raspberry Pi robotics project tutorial",
+                   "project_count": "5"
+                 }
+               }' | jq '.data'
+
+          echo ""
+          echo "✅ DIY projects parsing completed!"
+
+      - name: 📊 Summary
+        run: |
+          echo "🎉 DIY projects update finished!"
+          echo "🔨 Found Arduino, Raspberry Pi, and DIY robot projects"
+          echo "Check: https://robototehnika.vercel.app/api/projects"
