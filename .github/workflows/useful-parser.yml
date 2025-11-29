@@ -2,21 +2,35 @@ name: Useful Resources Parser (Daily)
 
 on:
   schedule:
-    # Каждый день в 11:00 UTC (~15:00 по Саратову)
-    - cron: '0 6,18 * * *'  # Дважды в день: 10:00 и Вж:00 по Саратову
+    - cron: '0 6,18 * * *'  # Дважды в день: 10:00 и 22:00 по Саратову
   workflow_dispatch:
 
 jobs:
   run-useful-recipe:
     runs-on: ubuntu-latest
     steps:
-      - name: Run Rube Recipe for Useful Resources
+      - name: 💡 Run Useful Resources Parser
         run: |
+          echo "🚀 Starting useful robotics resources parser..."
+          echo "🔍 Searching for tutorials, tools, and resources"
+          echo "📡 Publishing to: robototehnika.vercel.app/api/useful"
+
           curl -X POST "https://backend.composio.dev/api/v3/recipes/rcp_EuZwKlnKMhyB/execute" \
-            -H "X-API-Key: prorobotov2024" \
+            -H "X-API-Key: ${{ secrets.COMPOSIO_API_KEY }}" \
             -H "Content-Type: application/json" \
-            -d '{"input_data":{
-              "webhook_url":"https://robototehnika.vercel.app/api/useful",
-              "api_key":"prorobotov2024",
-              "resource_count":"2"
-            }}'
+            -d '{
+              "input_data": {
+                "webhook_url": "https://robototehnika.vercel.app/api/useful",
+                "api_key": "prorobotov2024",
+                "resource_count": "2"
+              }
+            }' | jq '.data'
+
+          echo ""
+          echo "✅ Useful resources parsing completed!"
+
+      - name: 📊 Summary
+        run: |
+          echo "🎉 Useful resources update finished!"
+          echo "📚 Found tutorials, tools, and learning resources"
+          echo "Check: https://robototehnika.vercel.app/api/useful"
