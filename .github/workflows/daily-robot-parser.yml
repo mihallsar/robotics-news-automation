@@ -2,25 +2,23 @@ name: Daily Robot Catalog Parser
 
 on:
   schedule:
-    # Запуск каждый день в 03:00 UTC (07:00по Саратову, GMT+4)
-    - cron: '0 6,18 * * *'  # Дважды в день: 10:00 и 22:00 по Саратову
-  
-  # Можно также запускать вручную
+    # Запуск каждый день в 06:00 и 18:00 UTC (10:00 и 22:00 по Саратову)
+    - cron: '0 6,18 * * *'
   workflow_dispatch:
 
 jobs:
   parse-robot-catalog:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: 🤖 Parse Robot Catalog via Rube (Optimized)
+      - name: 🤖 Parse Robot Catalog via Rube (Optimized, extended logging)
         run: |
           echo "🚀 Starting optimized robot catalog parser..."
-          echo "🎯 Using new recipe: rcp_5ajueyVK76BF"
+          echo "🎯 Using recipe: rcp_5ajueyVK76BF"
           echo "⚡ Parallelism: 10 workers"
           echo "🏭 Manufacturers: 24"
-          
-          curl -X POST "https://backend.composio.dev/api/v3/recipes/rcp_5ajueyVK76BF/execute" \
+
+          RESPONSE=$(curl -s -X POST "https://backend.composio.dev/api/v3/recipes/rcp_5ajueyVK76BF/execute" \
             -H "Content-Type: application/json" \
             -H "X-API-Key: ${{ secrets.COMPOSIO_API_KEY }}" \
             -d '{
@@ -30,11 +28,26 @@ jobs:
                 "search_mode": "all",
                 "max_robots_per_manufacturer": "all"
               }
-            }' | jq '.data.data'
-          
+            }')
+
+          # Покажи полный JSON результата (наглядно — что реально вернулось)
+          echo "🎯 FULL RECIPE RESPONSE:"
+          echo "$RESPONSE" | jq '.'
+
+          # Покажи число реально опубликованных роботов (ключ ищет и в data.data, и в data)
+          COUNT=$(echo "$RESPONSE" | jq '.data.data.robots_published // .data.robots_published // .data.robots_count // .robots_published // empty')
+          echo "🟢 Robots published: $COUNT"
+
+          # Покажи ошибки (если есть)
+          ERRORS=$(echo "$RESPONSE" | jq '.data.data.errors // .data.errors // .errors // empty')
+          if [ ! -z "$ERRORS" ] && [ "$ERRORS" != "null" ]; then
+            echo "🛑 ERRORS:"
+            echo "$ERRORS"
+          fi
+
           echo ""
           echo "✅ Robot catalog parsing completed!"
-      
+
       - name: 𓌊 Summary
         run: |
           echo "🎉 Daily robot catalog update finished!"
