@@ -1,0 +1,75 @@
+name: Test Direct API (No Composio)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+
+jobs:
+  test-direct-post:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Test POST to /api/robots
+        run: |
+          echo "🔄 Отправляем прямой POST запрос..."
+          
+          RESPONSE=$(curl -X POST https://robototehnika.vercel.app/api/robots \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: ${{ secrets.ROBOTS_API_KEY }}" \
+            -d '{
+              "name": "Тестовый робот из GitHub Actions",
+              "description": "Это автоматически созданная запись для проверки API",
+              "category": "промышленный робот",
+              "manufacturer": "Test Company",
+              "year": 2024,
+              "country": "Россия",
+              "price": 50000,
+              "official_url": "https://example.com",
+              "image_url": "https://robototehnika.vercel.app/test-robot.jpg"
+            }' \
+            -w "\nHTTP_CODE:%{http_code}" \
+            -s)
+          
+          echo "📊 Ответ сервера:"
+          echo "$RESPONSE"
+          
+          HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP_CODE:" | cut -d':' -f2)
+          echo "🔢 HTTP код: $HTTP_CODE"
+          
+          if [ "$HTTP_CODE" = "201" ] || [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ Успешно! Запись создана."
+            exit 0
+          else
+            echo "❌ Ошибка! HTTP код: $HTTP_CODE"
+            exit 1
+          fi
+
+      - name: Test POST to /api/news
+        run: |
+          echo "🔄 Отправляем запрос на /api/news..."
+          
+          RESPONSE=$(curl -X POST https://robototehnika.vercel.app/api/news \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: ${{ secrets.API_KEY }}" \
+            -d '{
+              "title": "Тестовая новость из GitHub Actions",
+              "content": "Это автоматически созданная новость для проверки работы API автоматизации. Время: '"$(date)"'",
+              "image_url": "https://robototehnika.vercel.app/robotics-news.jpg"
+            }' \
+            -w "\nHTTP_CODE:%{http_code}" \
+            -s)
+          
+          echo "📊 Ответ сервера:"
+          echo "$RESPONSE"
+          
+          HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP_CODE:" | cut -d':' -f2)
+          echo "🔢 HTTP код: $HTTP_CODE"
+          
+          if [ "$HTTP_CODE" = "201" ] || [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ Успешно! Новость создана."
+            exit 0
+          else
+            echo "❌ Ошибка! HTTP код: $HTTP_CODE"
+            exit 1
+          fi
